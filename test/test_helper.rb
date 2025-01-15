@@ -1,15 +1,32 @@
-ENV["RAILS_ENV"] ||= "test"
-require_relative "../config/environment"
-require "rails/test_help"
+# test/controllers/orders_controller_test.rb
 
-module ActiveSupport
-  class TestCase
-    # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors)
+require "test_helper"
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
+class OrdersControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    login_as users(:one)
+  end
 
-    # Add more helper methods to be used by all tests here...
+  test "should get index" do
+    get orders_url
+    assert_response :success
+  end
+end
+
+# Define login/logout methods for testing authentication
+class ActionDispatch::IntegrationTest
+  def login_as(user)
+    if respond_to?(:visit)
+      visit login_url
+      fill_in :name, with: user.name
+      fill_in :password, with: 'secret'
+      click_on 'Login'
+    else
+      post login_url, params: { name: user.name, password: 'secret' }
+    end
+  end
+
+  def logout
+    delete logout_url
   end
 end
