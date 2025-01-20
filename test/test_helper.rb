@@ -1,22 +1,27 @@
-# test/controllers/orders_controller_test.rb
+#---
+# Excerpted from "Agile Web Development with Rails 7",
+# published by The Pragmatic Bookshelf.
+# Copyrights apply to this code. It may not be used to create training material,
+# courses, books, articles, and the like. Contact us if you are in doubt.
+# We make no guarantees that this code is fit for any purpose.
+# Visit https://pragprog.com/titles/rails7 for more book information.
+#---
+ENV["RAILS_ENV"] ||= "test"
+require_relative "../config/environment"
+require "rails/test_help"
 
-require "test_helper"
+class ActiveSupport::TestCase
+  # Run tests in parallel with specified workers
+  parallelize(workers: :number_of_processors)
 
-class OrdersControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    login_as users(:one)
-  end
+  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
+  fixtures :all
 
-  test "should get index" do
-    get orders_url
-    assert_response :success
-  end
+  # Add more helper methods to be used by all tests here...
 end
-
-# Define login/logout methods for testing authentication
 class ActionDispatch::IntegrationTest
   def login_as(user)
-    if respond_to?(:visit)
+    if respond_to? :visit
       visit login_url
       fill_in :name, with: user.name
       fill_in :password, with: 'secret'
@@ -28,5 +33,9 @@ class ActionDispatch::IntegrationTest
 
   def logout
     delete logout_url
+  end
+
+  def setup
+    login_as users(:one)
   end
 end
